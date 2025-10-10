@@ -1,32 +1,45 @@
-import {
-  Instagram,
-  Linkedin,
-  Mail,
-  MapPin,
-  Phone,
-  Send,
-  Twitch,
-  Twitter,
-} from "lucide-react";
+/* eslint-disable no-unused-vars */
+import { Instagram, Linkedin, Mail, MapPin, Phone, Send } from "lucide-react";
 import { cn } from "../lib/utils";
 import { useToast } from "../assets/hooks/use-toast";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import emailjs from "@emailjs/browser";
 
 export const ContactSection = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const formRef = useRef(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      toast({
-        title: "Message sent!",
-        description: "Thank you for your message. I'll get back to you soon.",
-      });
-      setIsSubmitting(false);
-    }, 1500);
+    emailjs
+      .sendForm(
+        "service_cl7d56e", // your service ID
+        "template_fyl6d1p", // your template ID
+        formRef.current,
+        "NBakpXQbzPxXqEHfZ" // your public key
+      )
+      .then(
+        (result) => {
+          toast({
+            title: "Message sent!",
+            description:
+              "Thank you for your message. I'll get back to you soon.",
+          });
+          setIsSubmitting(false);
+          formRef.current.reset();
+        },
+        (error) => {
+          toast({
+            title: "Failed to send message",
+            description: "Please try again later.",
+            variant: "destructive",
+          });
+          setIsSubmitting(false);
+        }
+      );
   };
 
   return (
@@ -54,7 +67,7 @@ export const ContactSection = () => {
                 <div>
                   <h4 className="font-medium">Email</h4>
                   <a
-                    href="mailto:hello@gmail.com"
+                    href="mailto:sadipkhatri123@gmail.com"
                     className="text-muted-foreground hover:text-primary transition-colors"
                   >
                     sadipkhatri123@gmail.com
@@ -69,7 +82,7 @@ export const ContactSection = () => {
                 <div>
                   <h4 className="font-medium">Phone</h4>
                   <a
-                    href="tel:+11234567890"
+                    href="tel:+9779869946896"
                     className="text-muted-foreground hover:text-primary transition-colors"
                   >
                     +977 9869946896
@@ -108,7 +121,7 @@ export const ContactSection = () => {
                   <Instagram />
                 </a>
                 <a
-                  href="https://mail.google.com/mail/u/0/#inbox"
+                  href="mailto:sadipkhatri123@gmail.com"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -122,7 +135,7 @@ export const ContactSection = () => {
           <div className="bg-card p-8 rounded-lg shadow-xs">
             <h3 className="text-2xl font-semibold mb-6">Send a Message</h3>
 
-            <form className="space-y-6" onSubmit={handleSubmit}>
+            <form ref={formRef} className="space-y-6" onSubmit={handleSubmit}>
               <div>
                 <label
                   htmlFor="name"
@@ -154,6 +167,23 @@ export const ContactSection = () => {
                   required
                   className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="sk@gmail.com"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="title"
+                  className="block text-sm font-medium mb-2"
+                >
+                  Subject
+                </label>
+                <input
+                  type="text"
+                  id="title"
+                  name="title"
+                  required
+                  className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="Subject of your message"
                 />
               </div>
 
