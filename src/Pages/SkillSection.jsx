@@ -1,52 +1,87 @@
 import React from "react";
-const skills = [
-  { name: "HTML/CSS", level: 90, category: "frontend" },
-  { name: "JavaScript", level: 70, category: "frontend" },
-  { name: "React", level: 60, category: "frontend" },
-  { name: "Tailwind CSS", level: 80, category: "frontend" },
-  { name: "Bootstrap", level: 85, category: "frontend" },
+import { motion } from "framer-motion";
+import {
+  FaHtml5,
+  FaCss3Alt,
+  FaJsSquare,
+  FaReact,
+  FaBootstrap,
+} from "react-icons/fa";
+import { SiTailwindcss } from "react-icons/si";
 
-  //   // Tools
-  //   { name: "GitHub", level: 85, category: "tools" },
-  //   { name: "Figma", level: 45, category: "tools" },
-  //   { name: "VS Code", level: 92, category: "tools" },
+const skills = [
+  {
+    name: "HTML & CSS",
+    icon: (
+      <>
+        <FaHtml5 className="text-orange-500" />{" "}
+        <FaCss3Alt className="text-blue-600" />
+      </>
+    ),
+  },
+  { name: "JavaScript", icon: <FaJsSquare className="text-yellow-400" /> },
+  { name: "React.js", icon: <FaReact className="text-cyan-400" /> },
+  { name: "Tailwind CSS", icon: <SiTailwindcss className="text-teal-400" /> },
+  { name: "Bootstrap", icon: <FaBootstrap className="text-purple-600" /> },
 ];
-function SkillSection() {
+
+const container = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.12 } },
+};
+
+const skillVariant = {
+  hidden: { opacity: 0, y: 30, scale: 0.9 },
+  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6 } },
+};
+
+export default function SkillSection() {
   return (
-    <section id="skills" className="py-24 px-4 relative bg-secondary/30">
-      <div className="container mx-auto max-w-5xl">
-        <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
-          My <span className="text-primary"> Skills</span>
+    <section id="skills" className="py-24 bg-secondary/30 px-4">
+      <div className="max-w-6xl mx-auto">
+        <h2 className="text-4xl font-bold text-center mb-16">
+          My <span className="text-primary">Skills</span>
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ">
-          {skills.map((skills, key) => (
-            <div
-              key={key}
-              className="bg-card p-6 rounded-lg shadow-xs card-hover"
+        <motion.div
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
+        >
+          {skills.map((skill, i) => (
+            <motion.div
+              key={i}
+              variants={skillVariant}
+              whileHover={{ scale: 1.05 }}
+              className="relative bg-card/70 backdrop-blur-xl border border-secondary/40 
+              rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden"
             >
-              <div className="text-left mb-4">
-                <h3 className="font-semibold text-lg">{skills.name}</h3>
-              </div>
-              <div className="w-full bg-secondary/50 h-2 rounded-full overflow-hidden">
-                <div
-                  className="bg-primary h-2 rounded-full origin-left animate-[grow_1.5s_ease-out]"
+              {/* LARGE TRANSPARENT BACKGROUND TEXT */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <span
+                  className="text-5xl font-extrabold opacity-10 tracking-widest select-none"
                   style={{
-                    width: skills.level + "%",
+                    color: i % 2 === 0 ? "var(--primary)" : "var(--secondary)",
                   }}
-                />
-              </div>
-              <div className="text-right mt-1">
-                <span className="text-sm text-muted-foreground">
-                  {skills.level}%
+                >
+                  {skill.name.toUpperCase()}
                 </span>
               </div>
-            </div>
+
+              {/* ICON LOGO */}
+              <div className="relative w-14 h-14 mx-auto mb-5 flex items-center justify-center text-4xl">
+                {skill.icon}
+              </div>
+
+              <h3 className="text-xl font-semibold text-center">
+                {skill.name}
+              </h3>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
 }
-
-export default SkillSection;
